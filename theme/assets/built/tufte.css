@@ -1,0 +1,701 @@
+@charset "UTF-8";
+
+/* ============================================================
+   Tufte CSS — article-level styles
+   Faithful port of https://github.com/edwardtufte/tufte-css
+   The shell (font-face, body, headings, links, utilities, chrome)
+   lives in theme/partials/inline-css.hbs. This file holds article-
+   only rules: sections, sidenotes, marginnotes, figures, code,
+   blockquotes, epigraphs, tables, iframes, responsive + print +
+   dark adjustments, plus Ghost editor card aliases.
+   ============================================================ */
+
+/* ---- Article container --------------------------------------- */
+article {
+    padding: 5rem 0rem;
+}
+
+section {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+section > p,
+section > footer,
+section > table {
+    width: 55%;
+}
+
+/* 50 + 5 == 55, to be the same width as paragraph */
+section > dl,
+section > ol,
+section > ul {
+    width: 50%;
+    -webkit-padding-start: 5%;
+    padding-inline-start: 5%;
+}
+
+dt:not(:first-child),
+li:not(:first-child) {
+    margin-top: 0.25rem;
+}
+
+/* ---- Blockquote ---------------------------------------------- */
+/* Constrain the blockquote itself to 55% so direct-text quotes
+   (Substack imports often have <blockquote>text</blockquote> with
+   no inner <p>) wrap at the same column width as body paragraphs.
+   The inner <p>/footer fill the blockquote (auto width). */
+blockquote,
+blockquote.kg-blockquote-card {
+    font-size: 1.4rem;
+    width: 55%;
+    margin-right: 40px;
+}
+
+blockquote p,
+blockquote.kg-blockquote-card p {
+    width: auto;
+    margin-right: 0;
+}
+
+blockquote footer {
+    width: auto;
+    font-size: 1.1rem;
+    text-align: right;
+}
+
+/* ---- Chapter epigraphs --------------------------------------- */
+div.epigraph {
+    margin: 5em 0;
+}
+
+div.epigraph > blockquote {
+    margin-top: 3em;
+    margin-bottom: 3em;
+}
+
+div.epigraph > blockquote,
+div.epigraph > blockquote > p {
+    font-style: italic;
+}
+
+div.epigraph > blockquote > footer {
+    font-style: normal;
+}
+
+div.epigraph > blockquote > footer > cite {
+    font-style: italic;
+}
+
+/* ---- Figures -------------------------------------------------- */
+figure,
+.content figure.kg-card,
+.content figure.kg-image-card {
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+    max-width: 55%;
+    -webkit-margin-start: 0;
+    -webkit-margin-end: 0;
+    margin: 0 0 3em 0;
+}
+
+figcaption,
+figure.kg-card figcaption {
+    float: right;
+    clear: right;
+    margin-top: 0;
+    margin-bottom: 0;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    vertical-align: baseline;
+    position: relative;
+    max-width: 40%;
+}
+
+figure.fullwidth,
+.content figure.kg-width-wide,
+.content figure.kg-width-full {
+    max-width: 90%;
+}
+
+figure.fullwidth figcaption,
+.content figure.kg-width-wide figcaption,
+.content figure.kg-width-full figcaption {
+    margin-right: 24%;
+}
+
+img {
+    max-width: 100%;
+}
+
+/* ---- Sidenotes & marginnotes (the centerpiece) --------------- */
+/* Fallback: if a sidenote is stranded outside a <p> (e.g. an HTML
+   card was pasted with just the markup), the negative margin-right
+   would push it off-screen. Drop the negative margin and shrink the
+   width so it stays visible in the natural right gutter. */
+.content > .sidenote,
+.content > .marginnote,
+section > .sidenote,
+section > .marginnote {
+    margin-right: 0;
+    width: 30%;
+    font-style: italic;
+    opacity: 0.85;
+}
+
+.sidenote,
+.marginnote {
+    float: right;
+    clear: right;
+    margin-right: -60%;
+    width: 50%;
+    margin-top: 0.3rem;
+    margin-bottom: 0;
+    font-size: 1.1rem;
+    line-height: 1.3;
+    vertical-align: baseline;
+    position: relative;
+}
+
+.sidenote-number {
+    counter-increment: sidenote-counter;
+}
+
+.sidenote-number:after,
+.sidenote:before {
+    font-family: et-book-roman-old-style;
+    position: relative;
+    vertical-align: baseline;
+}
+
+.sidenote-number:after {
+    content: counter(sidenote-counter);
+    font-size: 1rem;
+    top: -0.5rem;
+    left: 0.1rem;
+}
+
+.sidenote:before {
+    content: counter(sidenote-counter) " ";
+    font-size: 1rem;
+    top: -0.5rem;
+}
+
+blockquote .sidenote,
+blockquote .marginnote {
+    margin-right: -82%;
+    min-width: 59%;
+    text-align: left;
+}
+
+input.margin-toggle {
+    display: none;
+}
+
+label.sidenote-number {
+    display: inline-block;
+    max-height: 2rem; /* should be less than or equal to paragraph line-height */
+}
+
+label.margin-toggle:not(.sidenote-number) {
+    display: none;
+}
+
+div.fullwidth,
+table.fullwidth {
+    width: 100%;
+}
+
+/* ---- Tables --------------------------------------------------- */
+div.table-wrapper {
+    overflow-x: auto;
+    font-family: "Trebuchet MS", "Gill Sans", "Gill Sans MT", sans-serif;
+}
+
+section > table {
+    width: 55%;
+}
+
+th, td {
+    padding: 0.25em 0.75em;
+    font-size: 1.4rem;
+    line-height: 2rem;
+    vertical-align: top;
+}
+
+th {
+    text-align: left;
+    border-bottom: 1px solid #111;
+}
+
+@media (prefers-color-scheme: dark) {
+    th { border-bottom-color: #ddd; }
+}
+
+/* ---- Code (article-specific sizing) -------------------------- */
+pre > code {
+    font-size: 0.9rem;
+    width: 52.5%;
+    margin-left: 2.5%;
+    overflow-x: auto;
+    display: block;
+}
+
+pre.fullwidth > code,
+.kg-card.kg-code-card pre.fullwidth > code {
+    width: 90%;
+}
+
+.sans > code {
+    font-size: 1.2rem;
+}
+
+h1 > code,
+h2 > code,
+h3 > code {
+    font-size: 0.80em;
+}
+
+.marginnote > code,
+.sidenote > code {
+    font-size: 1rem;
+}
+
+/* ---- Iframe wrapper (responsive video/embed) ----------------- */
+.iframe-wrapper {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 */
+    padding-top: 25px;
+    height: 0;
+}
+
+.iframe-wrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* ---- Ghost editor card aliases ------------------------------- */
+/* Default Ghost cards inside .content inherit Tufte aesthetics */
+
+.content figure.kg-embed-card {
+    max-width: 55%;
+    margin: 0 0 3em 0;
+}
+
+.content figure.kg-embed-card.kg-width-wide,
+.content figure.kg-embed-card.kg-width-full {
+    max-width: 90%;
+}
+
+.content figure.kg-embed-card .kg-embed-card-content,
+.content figure.kg-embed-card iframe {
+    max-width: 100%;
+}
+
+.content .kg-bookmark-card {
+    width: 55%;
+    margin: 1.4rem 0;
+    border: 1px solid #ccc;
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    background: transparent;
+}
+
+.content .kg-bookmark-card.kg-width-wide {
+    width: 90%;
+}
+
+.content .kg-bookmark-container {
+    display: flex;
+    text-decoration: none;
+    color: inherit;
+    padding: 1rem;
+}
+
+.content .kg-bookmark-content {
+    flex: 1 1 auto;
+}
+
+.content .kg-bookmark-title {
+    font-weight: 400;
+    font-style: italic;
+    font-size: 1.2rem;
+}
+
+.content .kg-bookmark-description {
+    font-size: 1rem;
+    line-height: 1.4;
+    margin-top: 0.4rem;
+}
+
+.content .kg-bookmark-metadata {
+    font-family: "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
+    font-size: 0.9rem;
+    margin-top: 0.6rem;
+    opacity: 0.7;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.content .kg-bookmark-icon {
+    width: 16px;
+    height: 16px;
+    margin-right: 0.4rem;
+}
+
+.content .kg-bookmark-author {
+    font-style: italic;
+}
+
+.content .kg-bookmark-author:after {
+    content: " · ";
+    font-style: normal;
+    opacity: 0.5;
+}
+
+.content .kg-bookmark-publisher {
+    font-style: normal;
+}
+
+.content .kg-bookmark-thumbnail img {
+    max-width: 120px;
+    margin-left: 1rem;
+}
+
+/* Callout card styled like an IG story:
+   black canvas, white serif type, centered, larger than body. */
+.content .kg-card.kg-callout-card,
+.content .kg-card[class*="kg-callout-card-"] {
+    width: 90%;
+    margin: 2.2rem 0;
+    padding: 3rem 2.5rem;
+    background: #000 !important;
+    color: #fff !important;
+    border: 0 !important;
+    border-left: 0 !important;
+    border-radius: 0;
+    box-shadow: none;
+    font-family: et-book, Palatino, "Palatino Linotype", "Book Antiqua", Georgia, serif;
+    font-style: normal;
+    font-size: 1.6rem;
+    line-height: 1.45;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.content .kg-callout-emoji {
+    font-size: 1.8rem;
+    line-height: 1;
+}
+
+.content .kg-callout-text,
+.content .kg-callout-text *,
+.content .kg-callout-card *,
+.content .kg-callout-card p,
+.content .kg-callout-card strong,
+.content .kg-callout-card em {
+    color: #fff !important;
+    background: transparent !important;
+}
+
+.content .kg-callout-card a {
+    color: #fff !important;
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+    text-decoration-thickness: 0.06em;
+}
+
+@media (max-width: 760px) {
+    .content .kg-card.kg-callout-card,
+    .content .kg-card[class*="kg-callout-card-"] {
+        width: 100%;
+        padding: 2rem 1.25rem;
+        font-size: 1.3rem;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    .content .kg-bookmark-card { border-color: #444; }
+}
+
+/* Hide leftover Substack subscribe buttons from imported posts.
+   They look like:
+     <div class="kg-card kg-button-card kg-align-center">
+       <a href="#/portal/signup" class="kg-btn">Subscribe</a>
+     </div>
+   The bottom .subscribe bar (and the mid-post clone) replace them. */
+.content .kg-card.kg-button-card:has(a[href="#/portal/signup"]) {
+    display: none !important;
+}
+.content .kg-card.kg-button-card a.kg-btn[href="#/portal/signup"] {
+    display: none !important;
+}
+
+.content .kg-button-card {
+    width: 55%;
+    text-align: left;
+    margin: 1.4rem 0;
+}
+
+.content .kg-button-card a.kg-btn {
+    font-family: "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
+    letter-spacing: 0.03em;
+    display: inline-block;
+    padding: 0.6rem 1.2rem;
+    background: #111;
+    color: #fffff8;
+    text-decoration: none;
+    border-radius: 0;
+}
+
+@media (prefers-color-scheme: dark) {
+    .content .kg-button-card a.kg-btn {
+        background: #ddd;
+        color: #151515;
+    }
+}
+
+.content .kg-gallery-card {
+    max-width: 90%;
+    margin: 0 0 3em 0;
+}
+
+.content .kg-gallery-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.content .kg-gallery-row {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.content .kg-gallery-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.content .kg-toggle-card {
+    width: 55%;
+    margin: 1.4rem 0;
+    border-top: 1px solid #ccc;
+    padding: 1rem 0;
+}
+
+.content .kg-toggle-card.kg-width-wide {
+    width: 90%;
+}
+
+.content .kg-toggle-heading {
+    font-style: italic;
+    font-size: 1.4rem;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.content .kg-toggle-content {
+    font-size: 1.4rem;
+    line-height: 2rem;
+    margin-top: 0.5rem;
+}
+
+.content .kg-audio-card,
+.content .kg-video-card,
+.content .kg-file-card,
+.content .kg-product-card {
+    width: 55%;
+    margin: 1.4rem 0;
+}
+
+.content .kg-audio-card.kg-width-wide,
+.content .kg-video-card.kg-width-wide,
+.content .kg-file-card.kg-width-wide,
+.content .kg-product-card.kg-width-wide {
+    width: 90%;
+}
+
+.content .kg-card-hascaption figcaption,
+.content figcaption {
+    text-align: left;
+}
+
+/* ============================================================
+   Responsive — mobile/tablet (max-width: 760px)
+   ============================================================ */
+@media (max-width: 760px) {
+    hr,
+    section > p,
+    section > footer,
+    section > table {
+        width: 100%;
+    }
+
+    pre > code {
+        width: 97%;
+    }
+
+    section > dl,
+    section > ol,
+    section > ul {
+        width: 90%;
+    }
+
+    figure,
+    .content figure.kg-card,
+    .content figure.kg-image-card {
+        max-width: 90%;
+    }
+
+    figcaption,
+    figure.fullwidth figcaption {
+        margin-right: 0%;
+        max-width: none;
+    }
+
+    blockquote {
+        margin-left: 1.5em;
+        margin-right: 0em;
+    }
+
+    blockquote p,
+    blockquote footer {
+        width: 100%;
+    }
+
+    label.margin-toggle:not(.sidenote-number) {
+        display: inline;
+    }
+
+    .sidenote,
+    .marginnote {
+        display: none;
+    }
+
+    .margin-toggle:checked + .sidenote,
+    .margin-toggle:checked + .marginnote {
+        display: block;
+        float: left;
+        left: 1rem;
+        clear: both;
+        width: 95%;
+        margin: 1rem 2.5%;
+        vertical-align: baseline;
+        position: relative;
+    }
+
+    label {
+        cursor: pointer;
+    }
+
+    div.table-wrapper,
+    table {
+        width: 85%;
+    }
+
+    img {
+        width: 100%;
+    }
+
+    .content .kg-bookmark-card,
+    .content .kg-callout-card,
+    .content .kg-button-card,
+    .content .kg-toggle-card,
+    .content .kg-audio-card,
+    .content .kg-video-card,
+    .content .kg-file-card,
+    .content .kg-product-card,
+    .content figure.kg-embed-card {
+        width: 100%;
+        max-width: 100%;
+    }
+}
+
+/* ============================================================
+   Print
+   ============================================================ */
+@media print {
+    body {
+        width: 100% !important;
+        max-width: none !important;
+        padding: 1em !important;
+        margin: 0 !important;
+        background: #fff !important;
+        color: #000 !important;
+    }
+
+    article {
+        padding: 0;
+    }
+
+    section > p,
+    section > footer,
+    section > table,
+    section > dl,
+    section > ol,
+    section > ul,
+    blockquote p,
+    blockquote footer {
+        width: 100%;
+    }
+
+    figure,
+    figure.fullwidth,
+    figure.kg-width-wide,
+    figure.kg-width-full {
+        max-width: 100%;
+    }
+
+    label.margin-toggle,
+    input.margin-toggle {
+        display: none !important;
+    }
+
+    .sidenote,
+    .marginnote {
+        display: inline;
+        float: none;
+        clear: none;
+        margin: 0 0.25em;
+        width: auto;
+        font-size: 0.9em;
+        font-style: italic;
+        position: static;
+    }
+
+    .sidenote:before,
+    .sidenote-number:after {
+        content: " (" counter(sidenote-counter) ") ";
+        position: static;
+        top: 0;
+        font-size: 0.9em;
+    }
+
+    pre > code,
+    pre.fullwidth > code {
+        width: 100%;
+    }
+
+    a:link,
+    a:visited {
+        text-decoration: underline;
+    }
+
+    .nav,
+    .foot,
+    .subscribe {
+        display: none !important;
+    }
+}

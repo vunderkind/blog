@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="{{@site.locale}}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>{{meta_title}}</title>
+<link rel="canonical" href="{{url absolute="true"}}">
+<link rel="preload" as="font" type="font/woff2" crossorigin
+      href="{{asset "fonts/et-book/et-book-roman-line-figures/et-book-roman-line-figures.woff2"}}">
+{{!-- inline critical CSS for fastest paint --}}
+<style>{{> "inline-css"}}</style>
+{{!-- full Tufte article CSS only on long-form pages --}}
+{{#is "post, page"}}{{> "tufte-link"}}{{/is}}
+{{ghost_head}}
+</head>
+<body class="{{body_class}}">
+<header class="nav">
+  <a class="brand" href="{{@site.url}}">{{@site.title}}</a>
+  <nav>
+    {{#foreach @site.navigation}}<a href="{{this.url}}">{{label}}</a>{{/foreach}}
+  </nav>
+</header>
+
+<main>{{{body}}}</main>
+
+<footer class="foot">
+  <span>&copy; {{date format="YYYY"}} {{@site.title}}</span>
+</footer>
+
+{{!-- plugin loader: only fires if the page actually contains [data-plugin] --}}
+<script type="module" src="{{asset "js/plugins.js"}}"></script>
+{{!-- TNG-style stardate: deterministic from published_at; replaces <time class="stardate"> textContent. --}}
+<script>(function(){var f=function(s){var d=new Date(s);var soy=new Date(Date.UTC(d.getUTCFullYear(),0,1));var doy=Math.floor((d-soy)/86400000)+1;return(1000*(d.getUTCFullYear()-1948)+doy*1000/365.25).toFixed(1)};document.querySelectorAll('time.stardate').forEach(function(t){t.textContent='Stardate '+f(t.dateTime)})})();</script>
+{{!-- Subscribe tagline: pick one randomly per page load. Runs before
+     the mid-post subscribe clone so both bars share the same tagline
+     within one render. --}}
+<script>(function(){var t=["Tinkerer building while thinking.","Life of mogwai","The last human on the planet","The fox knows many things, but the hedgehog knows one big thing.","Reality has a surprising amount of detail.","Computers can be understood—they are not magic.","Consider the ant.","The key is to give a damn.","so much depends upon a red wheel barrow glazed with rain water","When I heard the learn'd astronomer…","Turning and turning in the widening gyre…","I must remember to wake up.","It takes a village, so to speak.","Don't be seduced by the anthropocentric view.","Understand how you work, and how you don't.","The Smiler smiles.","You're doing amazing, sweetie.","Speak clearly, give it your best shot, don't be afraid."];document.querySelectorAll('.subscribe-tagline').forEach(function(p){p.textContent=t[Math.floor(Math.random()*t.length)]})})();</script>
+{{!-- Mid-post subscribe: clone the bottom .subscribe and insert it
+     after the content block that crosses the 50% wordcount mark. --}}
+<script>(function(){
+  var content = document.querySelector('article.post .content');
+  var bottom  = document.querySelector('article.post > .subscribe');
+  if (!content || !bottom) return;
+  var words = function(el){ return (el.textContent.match(/\S+/g)||[]).length; };
+  var total = words(content);
+  if (total < 500) return;
+  var half = total / 2, acc = 0, target = null;
+  var kids = content.children;
+  for (var i = 0; i < kids.length; i++) {
+    acc += words(kids[i]);
+    if (acc >= half) { target = kids[i]; break; }
+  }
+  if (!target || target === kids[kids.length - 1]) return;
+  var clone = bottom.cloneNode(true);
+  clone.classList.add('subscribe-mid');
+  target.after(clone);
+})();</script>
+{{!-- Tinybird page-hit tracker. Ghost upstream image lacks the
+     analytics admin endpoints, so the Admin toggle cannot enable
+     this; we POST events directly to the workspace's analytics_events
+     datasource. View dashboards at:
+     https://cloud.tinybird.co/gcp/europe-west2/life_of_mogwai
+     The token below is APPEND-only on analytics_events — safe to
+     expose in HTML; worst case an attacker can spam events. --}}
+<script>(function(){
+  var TB_TOKEN="p.eyJ1IjogIjFmZTI2NWU0LWExNjQtNGJiYi04N2JhLWQ5NDI4ODJkNzRlNSIsICJpZCI6ICIwYmI1M2EzMC1lNDAzLTRhYzYtYTE5OC1kZTZhYTg3YTI4ZmYiLCAiaG9zdCI6ICJnY3AtZXVyb3BlLXdlc3QyIn0.evBOYlqOjRvHnHGMBpnNsF2PQl7viy7dniW1PTzCSBI";
+  var TB_URL="https://api.europe-west2.gcp.tinybird.co/v0/events?name=analytics_events";
+  var SITE_UUID="{{@site.site_uuid}}";
+  try {
+    var sid = sessionStorage.getItem('tb_sid');
+    if(!sid){ sid = (crypto && crypto.randomUUID) ? crypto.randomUUID() :
+      ('xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,function(c){
+        var r=Math.random()*16|0,v=c==='x'?r:(r&0x3|0x8); return v.toString(16);
+      }));
+      sessionStorage.setItem('tb_sid', sid);
+    }
+    var payload = {
+      timestamp: new Date().toISOString(),
+      action: 'page_hit',
+      version: '1',
+      session_id: sid,
+      payload: {
+        site_uuid: SITE_UUID || 'unknown',
+        member_uuid: 'undefined',
+        member_status: 'undefined',
+        post_uuid: 'undefined',
+        post_type: 'null',
+        locale: (navigator.language || 'en'),
+        location: '',
+        referrer: document.referrer || null,
+        pathname: location.pathname,
+        href: location.href
+      }
+    };
+    fetch(TB_URL, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json','Authorization':'Bearer '+TB_TOKEN},
+      body: JSON.stringify(payload),
+      keepalive: true
+    }).catch(function(){});
+  } catch(e){}
+})();</script>
+{{ghost_foot}}
+</body>
+</html>

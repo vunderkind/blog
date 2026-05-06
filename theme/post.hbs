@@ -1,0 +1,34 @@
+{{!< default}}
+
+{{#post}}
+<article class="post">
+  {{#if title}}<h1>{{title}}</h1>{{/if}}
+  {{#if custom_excerpt}}<p class="subtitle">{{custom_excerpt}}</p>{{/if}}
+  <p class="byline">
+    <span class="numeral"><time class="stardate" datetime="{{date format="YYYY-MM-DD"}}">{{date format="MMMM D, YYYY"}}</time></span>{{#unless access}} · <span class="sans">Members only</span>{{/unless}}
+  </p>
+
+  <section class="content">
+    {{content}}
+  </section>
+
+  {{!-- Slowclap widget. data-platform-id uses Ghost post UUID so claps
+       follow the post across URL/slug changes and email/preview reads.
+       Colors mapped to Tufte palette. Script tag below loads the widget
+       once per post page. --}}
+  <div class="slowclap-widget"
+       data-platform-id="{{uuid}}"
+       data-color-accent="#111"
+       data-color-text="#111"
+       data-color-default="#fffff8"
+       data-color-clapped="#fffff8"></div>
+  <script src="https://slowclap.xyz/widget.js" data-key="sc_pub_live_cHJt33ZGYF3EwVf0o7"></script>
+
+  {{#unless @member}}
+  <section class="subscribe">
+    <p class="subscribe-tagline">Tinkerer building while thinking.</p>
+    <button data-portal="signup">Subscribe</button>
+  </section>
+  {{/unless}}
+</article>
+{{/post}}

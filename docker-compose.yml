@@ -1,0 +1,20 @@
+# Local dev only. Production runs on Fly (see fly.toml + deploy.sh).
+services:
+  ghost:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "2368:2368"
+    environment:
+      url: http://localhost:2368
+      database__client: sqlite3
+      database__connection__filename: /var/lib/ghost/content/data/ghost.db
+      database__useNullAsDefault: "true"
+      NODE_ENV: development
+    volumes:
+      - ghost-content:/var/lib/ghost/content
+      # Live-mount the theme so edits reload instantly in dev.
+      - ./theme:/var/lib/ghost/content/themes/holey-fox
+
+volumes:
+  ghost-content:

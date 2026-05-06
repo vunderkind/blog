@@ -1,0 +1,88 @@
+{{!--
+  TUFTE CSS — AUTHORING SNIPPETS REFERENCE
+  This file is wrapped in a Handlebars comment, so Ghost never renders it.
+  It exists as a copy-paste reference for authors. To use any snippet,
+  open Ghost's editor, type "/html" to insert an HTML card, and paste.
+
+  RULE FOR SIDENOTES / MARGINNOTES: the markup must live INSIDE the <p>
+  it annotates. Put the entire paragraph plus the sidenote in a single
+  HTML card. Without a <p> wrapper the sidenote floats off-screen.
+
+  =========================================================================
+  1. SIDENOTE  (numbered, auto-incremented)
+  =========================================================================
+  <p>This is a normal sentence that mentions an aside<label for="sn-1" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle"/><span class="sidenote">The aside itself, set in the margin in smaller type.</span> and then continues to the end of the paragraph.</p>
+
+  Bump the id (sn-2, sn-3...) per note so each toggle on mobile is unique.
+
+  =========================================================================
+  2. MARGINNOTE  (no number, ⊕ symbol on mobile)
+  =========================================================================
+  <p>A claim that benefits from a side observation<label for="mn-1" class="margin-toggle">&#8853;</label><input type="checkbox" id="mn-1" class="margin-toggle"/><span class="marginnote">Side observation, no number.</span>, and the rest of the sentence after.</p>
+
+  =========================================================================
+  3. NEWTHOUGHT  (small-caps opening of a paragraph)
+  =========================================================================
+  <p><span class="newthought">In the beginning</span> there was…</p>
+
+  =========================================================================
+  4. EPIGRAPH  (chapter-opener quote)
+  =========================================================================
+  <div class="epigraph">
+    <blockquote>
+      <p>The cowards never started and the weak died on the way.</p>
+      <footer>Author Name, <cite>Source Title</cite></footer>
+    </blockquote>
+  </div>
+
+  =========================================================================
+  5. FULL-WIDTH FIGURE  (90% column instead of 55%)
+  =========================================================================
+  <figure class="fullwidth">
+    <img src="..." alt="...">
+    <figcaption>Caption text.</figcaption>
+  </figure>
+
+  Ghost's "Wide" image card width is also auto-styled to fullwidth.
+
+  =========================================================================
+  6. NUMERAL  (old-style figures inline)
+  =========================================================================
+  <p>In <span class="numeral">1969</span>, …</p>
+
+  =========================================================================
+  7. SANS-SERIF UTILITY
+  =========================================================================
+  <span class="sans">Sans-serif text with letter-spacing</span>
+
+  =========================================================================
+  8. DANGER UTILITY
+  =========================================================================
+  <span class="danger">Critical warning</span>
+
+  =========================================================================
+  9. RESPONSIVE 16:9 IFRAME / VIDEO
+  =========================================================================
+  <div class="iframe-wrapper">
+    <iframe src="https://www.youtube.com/embed/..." allowfullscreen></iframe>
+  </div>
+
+  Ghost's YouTube embed card (kg-embed-card) is auto-styled for 16:9.
+
+  =========================================================================
+  10. FULL-WIDTH PRE / CODE BLOCK
+  =========================================================================
+  <pre class="fullwidth"><code>... long code ...</code></pre>
+
+  =========================================================================
+  11. TABLE WRAPPER  (horizontal-scroll on narrow screens)
+  =========================================================================
+  <div class="table-wrapper">
+    <table>
+      <thead><tr><th>Header</th><th>Header</th></tr></thead>
+      <tbody>
+        <tr><td>Cell</td><td>Cell</td></tr>
+      </tbody>
+    </table>
+  </div>
+--}}

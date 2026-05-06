@@ -1,0 +1,26 @@
+{{!< default}}
+
+<section class="subscribe">
+  <p class="subscribe-tagline">Tinkerer building while thinking.</p>
+  <button data-portal="signup">Subscribe</button>
+</section>
+
+<ul class="post-list">
+  {{#foreach posts}}
+    <li>
+      <a href="{{url}}">{{title}}</a>
+      <time datetime="{{date format="YYYY-MM-DD"}}">{{date format="MMM D, YYYY"}}</time>
+    </li>
+  {{/foreach}}
+</ul>
+
+{{#match pagination.pages ">" 1}}
+<nav class="pagination">
+  <span>
+    {{#if pagination.prev}}<a class="back" href="{{#match pagination.prev "==" 1}}/{{else}}/page/{{pagination.prev}}/{{/match}}"><span class="arr">←</span> Prev</a>{{/if}}
+  </span>
+  <span>
+    {{#if pagination.next}}<a class="forward" href="/page/{{pagination.next}}/">Next <span class="arr">→</span></a>{{/if}}
+  </span>
+</nav>
+{{/match}}

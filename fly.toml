@@ -1,0 +1,43 @@
+# Fly.io config. App name is set on first `fly launch` / `fly apps create`.
+# Update `app =` below after you pick a name. Region can be changed any time.
+
+app = "blogwai"
+primary_region = "ewr"            # pick one close to you: iad, lhr, ams, sjc, syd, gru...
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  # Public URL Ghost uses to build links. With Fly's free *.fly.dev cert this
+  # is https://<app>.fly.dev out of the box; swap to your custom domain later.
+  url = "https://gist.holeyfox.co"
+  NODE_ENV = "production"
+  database__client = "sqlite3"
+  database__connection__filename = "/var/lib/ghost/content/data/ghost.db"
+  database__useNullAsDefault = "true"
+
+[[mounts]]
+  source = "ghost_content"
+  destination = "/var/lib/ghost/content"
+  initial_size = "3gb"
+
+[http_service]
+  internal_port = 2368
+  force_https = true
+  auto_stop_machines = "off"       # Ghost is stateful — keep the VM up
+  auto_start_machines = true
+  min_machines_running = 1
+
+  [http_service.concurrency]
+    type = "requests"
+    soft_limit = 80
+    hard_limit = 100
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "1gb"                   # Ghost comfortably fits in 1GB
+  cpus = 1
+
+# No explicit HTTP health check: Ghost issues 301 on any non-HTTPS request
+# (because `url = https://...`), which Fly treats as unhealthy. Fall back to
+# the default TCP check — it passes as soon as Ghost binds to 2368.

@@ -1,0 +1,24 @@
+# Secrets — never commit. Use .env.example as the schema.
+.env
+.tinyb
+
+# Local Claude Code state
+.claude/
+CLAUDE.md
+
+# verify-frontend artifacts (regenerable; ~25MB)
+.verify/
+
+# Node / build output
+node_modules/
+*.log
+.DS_Store
+
+# OS / editor cruft
+.idea/
+.vscode/
+*.swp
+*.bak
+
+# Local dev container state (Ghost SQLite mount)
+ghost-content/

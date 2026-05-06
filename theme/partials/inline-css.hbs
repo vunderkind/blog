@@ -1,0 +1,429 @@
+@charset "UTF-8";
+
+/* ET Book — adapted from https://github.com/edwardtufte/et-book */
+@font-face {
+    font-family: "et-book";
+    src: url("{{asset "fonts/et-book/et-book-roman-line-figures/et-book-roman-line-figures.woff2"}}") format("woff2"),
+         url("{{asset "fonts/et-book/et-book-roman-line-figures/et-book-roman-line-figures.woff"}}") format("woff"),
+         url("{{asset "fonts/et-book/et-book-roman-line-figures/et-book-roman-line-figures.ttf"}}") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: "et-book";
+    src: url("{{asset "fonts/et-book/et-book-display-italic-old-style-figures/et-book-display-italic-old-style-figures.woff2"}}") format("woff2"),
+         url("{{asset "fonts/et-book/et-book-display-italic-old-style-figures/et-book-display-italic-old-style-figures.woff"}}") format("woff"),
+         url("{{asset "fonts/et-book/et-book-display-italic-old-style-figures/et-book-display-italic-old-style-figures.ttf"}}") format("truetype");
+    font-weight: normal;
+    font-style: italic;
+    font-display: swap;
+}
+@font-face {
+    font-family: "et-book";
+    src: url("{{asset "fonts/et-book/et-book-bold-line-figures/et-book-bold-line-figures.woff2"}}") format("woff2"),
+         url("{{asset "fonts/et-book/et-book-bold-line-figures/et-book-bold-line-figures.woff"}}") format("woff"),
+         url("{{asset "fonts/et-book/et-book-bold-line-figures/et-book-bold-line-figures.ttf"}}") format("truetype");
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: "et-book-roman-old-style";
+    src: url("{{asset "fonts/et-book/et-book-roman-old-style-figures/et-book-roman-old-style-figures.woff2"}}") format("woff2"),
+         url("{{asset "fonts/et-book/et-book-roman-old-style-figures/et-book-roman-old-style-figures.woff"}}") format("woff"),
+         url("{{asset "fonts/et-book/et-book-roman-old-style-figures/et-book-roman-old-style-figures.ttf"}}") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* ---- Reset & base ------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { font-size: 15px; -webkit-text-size-adjust: 100%; }
+
+body {
+    width: 87.5%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 12.5%;
+    font-family: et-book, Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
+    background-color: #fffff8;
+    color: #111;
+    max-width: 1400px;
+    counter-reset: sidenote-counter;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1 0 auto;
+}
+
+.foot {
+    flex-shrink: 0;
+}
+
+@media (prefers-color-scheme: dark) {
+    body { background-color: #151515; color: #ddd; }
+}
+
+/* ---- Headings (Tufte canonical) -----------------------------
+   Width-constrained to match the 55% body column so titles and
+   subtitles don't sprawl wider than the prose underneath. */
+h1 {
+    font-weight: 400;
+    margin-top: 4rem;
+    margin-bottom: 1.5rem;
+    font-size: 3.2rem;
+    line-height: 1;
+    width: 55%;
+}
+h2 {
+    font-style: italic;
+    font-weight: 400;
+    margin-top: 2.1rem;
+    margin-bottom: 1.4rem;
+    font-size: 2.2rem;
+    line-height: 1;
+    width: 55%;
+}
+h3 {
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1.7rem;
+    margin-top: 2rem;
+    margin-bottom: 1.4rem;
+    line-height: 1;
+    width: 55%;
+}
+h4 {
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1.5rem;
+    margin-top: 1.6rem;
+    margin-bottom: 1rem;
+    line-height: 1.15;
+    width: 55%;
+}
+h5 {
+    font-weight: 400;
+    font-variant: small-caps;
+    letter-spacing: 0.04em;
+    font-size: 1.35rem;
+    margin-top: 1.4rem;
+    margin-bottom: 0.8rem;
+    line-height: 1.15;
+    width: 55%;
+}
+h6 {
+    font-style: italic;
+    font-weight: 400;
+    font-variant: small-caps;
+    letter-spacing: 0.04em;
+    font-size: 1.25rem;
+    margin-top: 1.2rem;
+    margin-bottom: 0.6rem;
+    line-height: 1.15;
+    width: 55%;
+}
+
+hr {
+    display: block;
+    height: 1px;
+    width: 55%;
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin: 1em 0;
+    padding: 0;
+}
+
+p.subtitle {
+    font-style: italic;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    font-size: 1.8rem;
+    display: block;
+    line-height: 1.15;
+    width: 55%;
+}
+
+/* ---- Byline (deprioritized: small, gray, sans) ----------------- */
+p.byline {
+    font-family: "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
+    letter-spacing: 0.03em;
+    font-size: 0.95rem;
+    color: #888;
+    margin-top: 0.4rem;
+    margin-bottom: 2.5rem;
+    line-height: 1.4;
+    display: block;
+    width: 55%;
+}
+p.byline .numeral {
+    font-family: et-book-roman-old-style;
+    letter-spacing: normal;
+}
+p.byline a:link, p.byline a:visited {
+    color: inherit;
+}
+
+/* ---- Paragraphs & lists (base sizing) ----------------------- */
+p, dl, ol, ul {
+    font-size: 1.4rem;
+    line-height: 2rem;
+}
+p {
+    margin-top: 1.4rem;
+    margin-bottom: 1.4rem;
+    padding-right: 0;
+    vertical-align: baseline;
+}
+
+/* ---- Links (Tufte canonical) -------------------------------- */
+a:link, a:visited {
+    color: inherit;
+    text-underline-offset: 0.1em;
+    text-decoration-thickness: 0.05em;
+}
+
+/* ---- Inline code (article overrides live in tufte.css) ------ */
+code, pre > code {
+    font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    font-size: 1.0rem;
+    line-height: 1.42;
+    -webkit-text-size-adjust: 100%;
+}
+
+/* ---- Utility classes ---------------------------------------- */
+.numeral { font-family: et-book-roman-old-style; }
+.danger { color: red; }
+.sans {
+    font-family: "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
+    letter-spacing: 0.03em;
+}
+span.newthought {
+    font-variant: small-caps;
+    font-size: 1.2em;
+}
+.fullwidth { max-width: 90%; clear: both; }
+
+/* ---- Site chrome: header nav -------------------------------- */
+.nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin: 2rem 0 3rem;
+    font-family: "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
+    letter-spacing: 0.03em;
+    width: 87.5%;
+}
+.nav .brand {
+    font-weight: 400;
+    text-decoration: none;
+    font-size: 1.3rem;
+    font-variant: small-caps;
+    letter-spacing: 0.06em;
+}
+.nav nav a {
+    margin-left: 1.5rem;
+    text-decoration: none;
+    font-size: 1.05rem;
+    opacity: 0.7;
+}
+.nav nav a:hover { opacity: 1; }
+
+/* ---- Site chrome: footer ------------------------------------ */
+.foot {
+    margin-top: 5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #ccc;
+    display: flex;
+    justify-content: space-between;
+    font-size: 1rem;
+    opacity: 0.7;
+    font-family: "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
+    letter-spacing: 0.03em;
+    width: 87.5%;
+    padding-bottom: 2rem;
+}
+.foot a { text-decoration: none; }
+
+@media (prefers-color-scheme: dark) {
+    .foot { border-top-color: #444; }
+    hr { border-top-color: #444; }
+}
+
+/* ---- Homepage post list ------------------------------------- */
+.post-list {
+    list-style: none;
+    padding: 0;
+    margin: 2rem 0 3rem;
+    width: 87.5%;
+}
+.post-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid #eee;
+    gap: 1rem;
+}
+.post-list a {
+    text-decoration: none;
+    font-size: 1.4rem;
+    flex: 1;
+}
+.post-list a:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 0.05em;
+    text-underline-offset: 0.1em;
+}
+.post-list time {
+    font-family: et-book-roman-old-style;
+    font-variant-numeric: tabular-nums;
+    font-size: 1.1rem;
+    opacity: 0.6;
+    white-space: nowrap;
+}
+@media (prefers-color-scheme: dark) {
+    .post-list li { border-bottom-color: #333; }
+}
+
+.pagination {
+    margin: 2rem 0;
+    width: 87.5%;
+    /* inherit body font-family (et-book) and font-size (1.4rem-ish) */
+    font-size: 1.2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+.pagination a {
+    text-decoration: none;
+    opacity: 0.55;
+    color: inherit;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.4em;
+}
+.pagination a:hover { opacity: 1; text-decoration: underline; }
+.pagination .arr {
+    /* nudge arrow to optical center against serif body text */
+    font-size: 1.05em;
+    line-height: 1;
+    position: relative;
+    top: 0.05em;
+}
+
+/* ---- Subscribe bar: slim, full-width (homepage + post bottom) -- */
+.subscribe {
+    width: 87.5%;
+    margin: 1.5rem 0 3rem;
+    padding: 0.9rem 0;
+    border: 0;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+}
+.subscribe p {
+    margin: 0;
+    font-style: italic;
+    font-size: 1.3rem;
+    line-height: 1.4;
+    flex: 1;
+}
+.subscribe button {
+    font-family: "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
+    letter-spacing: 0.03em;
+    font-size: 1rem;
+    padding: 0.5rem 1.1rem;
+    background: #111;
+    color: #fffff8;
+    border: 0;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+.subscribe button:hover { background: #333; }
+
+@media (prefers-color-scheme: dark) {
+    .subscribe { border-top-color: #444; border-bottom-color: #444; }
+    .subscribe button { background: #ddd; color: #151515; }
+    .subscribe button:hover { background: #aaa; }
+}
+
+/* On post/page templates, the subscribe bar matches the 55% body
+   column instead of the wider 87.5% homepage list width. */
+article .subscribe {
+    width: 55%;
+}
+
+@media (max-width: 760px) {
+    .subscribe,
+    article .subscribe {
+        width: 100%;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.8rem;
+    }
+}
+
+/* ---- Responsive: mobile ------------------------------------ */
+@media (max-width: 760px) {
+    body {
+        /* tighter padding so body text fills more of the width */
+        width: 92%;
+        padding-left: 4%;
+        padding-right: 4%;
+    }
+    .nav, .foot, .post-list, .pagination, .subscribe {
+        width: 100%;
+    }
+    .nav nav a { margin-left: 1rem; }
+
+    /* Headings + subtitle fill the column on mobile and shrink */
+    h1 { font-size: 2.1rem; width: 100%; }
+    h2 { font-size: 1.6rem; width: 100%; }
+    h3 { font-size: 1.4rem; width: 100%; }
+    h4 { font-size: 1.3rem; width: 100%; }
+    h5 { font-size: 1.2rem; width: 100%; }
+    h6 { font-size: 1.15rem; width: 100%; }
+    p.subtitle { font-size: 1.3rem; width: 100%; }
+    p.byline { width: 100%; }
+    hr { width: 100%; }
+}
+
+/* ---- Custom cursor: small ink dot site-wide, with system
+   I-beam on prose paragraphs (so selection still feels normal),
+   and dot on every clickable thing (overrides text-cursor that
+   bubbles up from link text). ------------------------------- */
+body {
+    cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><circle cx='6' cy='6' r='3' fill='%23111'/></svg>") 6 6, default;
+}
+/* Body prose only — NOT including links/post-list */
+.content p, .content h1, .content h2, .content h3, .content h4,
+.content blockquote, .content li, .content figcaption,
+article > h1, article > .subtitle, article > .byline {
+    cursor: text;
+}
+/* Links/buttons everywhere: dot cursor (override any inherited text) */
+a, a *, button, button *, label.margin-toggle,
+[data-portal], [role="button"], input[type="checkbox"],
+.post-list a, .post-list a *, .post-list time, .pagination a {
+    cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><circle cx='6' cy='6' r='3' fill='%23111'/></svg>") 6 6, pointer !important;
+}
+@media (prefers-color-scheme: dark) {
+    body {
+        cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><circle cx='6' cy='6' r='3' fill='%23ddd'/></svg>") 6 6, default;
+    }
+    a, a *, button, button *, label.margin-toggle,
+    [data-portal], [role="button"], input[type="checkbox"],
+    .post-list a, .post-list a *, .post-list time, .pagination a {
+        cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><circle cx='6' cy='6' r='3' fill='%23ddd'/></svg>") 6 6, pointer !important;
+    }
+}

@@ -1,0 +1,24 @@
+{
+  "name": "holey-fox",
+  "description": "Faithful Tufte CSS implementation as a Ghost theme, with a lazy-loaded plugin system.",
+  "version": "2.0.0",
+  "engines": {
+    "ghost": ">=5.0.0",
+    "ghost-api": "v5"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "you",
+    "email": "you@example.com"
+  },
+  "config": {
+    "posts_per_page": 20,
+    "image_sizes": {
+      "s": { "width": 480 },
+      "m": { "width": 960 },
+      "l": { "width": 1600 }
+    },
+    "card_assets": false,
+    "custom": {}
+  }
+}
