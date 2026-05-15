@@ -1,0 +1,23 @@
+# Continuous replication of Ghost's SQLite to S3-compatible storage.
+# Reads R2 credentials + bucket info from env vars (Fly secrets):
+#   LITESTREAM_BUCKET            e.g. holeyfox-blog-backup
+#   LITESTREAM_ENDPOINT          e.g. https://<acct>.r2.cloudflarestorage.com
+#   LITESTREAM_ACCESS_KEY_ID     R2 access key
+#   LITESTREAM_SECRET_ACCESS_KEY R2 secret access key
+#
+# Restore in disaster: see scripts/litestream-restore.sh.
+
+dbs:
+  - path: /var/lib/ghost/content/data/ghost.db
+    replicas:
+      - type: s3
+        bucket: ${LITESTREAM_BUCKET}
+        path: ghost.db
+        endpoint: ${LITESTREAM_ENDPOINT}
+        force-path-style: true
+        access-key-id: ${LITESTREAM_ACCESS_KEY_ID}
+        secret-access-key: ${LITESTREAM_SECRET_ACCESS_KEY}
+        # Keep WAL frames for 24h, snapshots for 7d. Adjust to taste.
+        retention: 168h
+        snapshot-interval: 24h
+        sync-interval: 1s

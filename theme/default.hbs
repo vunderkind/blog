@@ -12,7 +12,39 @@
 <style>{{> "inline-css"}}</style>
 {{!-- full Tufte article CSS only on long-form pages --}}
 {{#is "post, page"}}{{> "tufte-link"}}{{/is}}
+{{!-- Override og:image and twitter:image with our pre-generated
+     Tufte cards (1200x630, et-book serif on cream). Placed BEFORE
+     {{ghost_head}} so crawlers see our tag first (FB/Twitter/iMessage
+     honor first-encountered og:image). Three card families:
+       - posts/pages: /assets/og/<slug>.png (per-post)
+       - author pages: /assets/og/author-<slug>.png
+       - home/tag/paged/etc: /assets/og/home.png
+     Generator: scripts/generate-og-cards.mjs. --}}
+{{#is "post, page"}}{{#post}}
+<meta property="og:image"  content="{{@site.url}}/assets/og/{{slug}}.png">
+<meta property="og:image:width"  content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:image" content="{{@site.url}}/assets/og/{{slug}}.png">
+<meta name="twitter:card"  content="summary_large_image">
+{{/post}}{{else}}{{#is "author"}}
+<meta property="og:image"  content="{{@site.url}}/assets/og/author-{{author.slug}}.png">
+<meta property="og:image:width"  content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:image" content="{{@site.url}}/assets/og/author-{{author.slug}}.png">
+<meta name="twitter:card"  content="summary_large_image">
+{{else}}
+<meta property="og:image"  content="{{@site.url}}/assets/og/home.png">
+<meta property="og:image:width"  content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:image" content="{{@site.url}}/assets/og/home.png">
+<meta name="twitter:card"  content="summary_large_image">
+{{/is}}{{/is}}
 {{ghost_head}}
+
+{{!-- Favicon: warm-gold asterism fleuron. Placed AFTER {{ghost_head}} so
+     our SVG icon overrides Ghost's default publication icon. --}}
+<link rel="icon" type="image/svg+xml" href="{{asset "favicon.svg"}}">
+<link rel="mask-icon" href="{{asset "favicon.svg"}}" color="#C69B59">
 </head>
 <body class="{{body_class}}">
 <header class="nav">
