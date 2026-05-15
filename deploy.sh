@@ -6,7 +6,8 @@
 #
 # Usage:
 #   ./deploy.sh init   <app-name>    # first-time: create app, volume, set secrets
-#   ./deploy.sh push                 # redeploy latest code
+#   ./deploy.sh push                 # regenerate OG cards + redeploy
+#   ./deploy.sh push --skip-og       # redeploy without regenerating OG cards
 #   ./deploy.sh logs                 # tail production logs
 #   ./deploy.sh ssh                  # shell into the running machine
 #   ./deploy.sh status               # machine + volume status
@@ -50,7 +51,20 @@ cmd_init() {
   echo "──────────────────────────────────────────────────"
 }
 
-cmd_push()    { fly deploy; }
+cmd_push() {
+  # Refresh OG social cards from current Ghost posts before deploying.
+  # Skip with --skip-og or when GHOST_ADMIN_API_KEY isn't set in .env.
+  if [ "${1:-}" = "--skip-og" ]; then
+    shift
+    echo "→ Skipping OG card generation (--skip-og)"
+  elif [ -f .env ] && grep -q "^GHOST_ADMIN_API_KEY=" .env; then
+    echo "→ Generating OG cards"
+    node scripts/generate-og-cards.mjs || echo "warn: OG generation failed; continuing with existing cards"
+  else
+    echo "→ Skipping OG card generation (no GHOST_ADMIN_API_KEY in .env)"
+  fi
+  fly deploy
+}
 cmd_logs()    { fly logs; }
 cmd_ssh()     { fly ssh console; }
 cmd_status()  { fly status; fly volumes list; }
