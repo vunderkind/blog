@@ -4,8 +4,7 @@
   "version": "2.0.0",
   "keywords": ["ghost-theme"],
   "engines": {
-    "ghost": ">=5.0.0",
-    "ghost-api": "v5"
+    "ghost": ">=5.0.0"
   },
   "license": "MIT",
   "author": {
@@ -19,7 +18,7 @@
       "m": { "width": 960 },
       "l": { "width": 1600 }
     },
-    "card_assets": false,
+    "card_assets": true,
     "custom": {}
   }
 }

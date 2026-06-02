@@ -754,3 +754,42 @@ h3 > code {
         display: none !important;
     }
 }
+
+/* ============================================================
+   Dark-mode tuning for Ghost's bundled card assets (package.json
+   card_assets:true). The theme's own .content .kg-* rules win on
+   specificity; these only re-skin the card types Ghost styles for us
+   (file / product / nft / toggle / audio / video / alt-blockquote) so
+   they fit the dark palette instead of Ghost's light defaults.
+   ============================================================ */
+.content .kg-file-card-container,
+.content .kg-product-card-container,
+.content .kg-nft-card,
+.content .kg-toggle-card,
+.content .kg-audio-player-container,
+.content .kg-video-player-container {
+    background: #1c1c1c !important;
+    border-color: #444 !important;
+    color: #ddd !important;
+}
+.content .kg-file-card-title,
+.content .kg-file-card-caption,
+.content .kg-file-card-filename,
+.content .kg-file-card-filesize,
+.content .kg-product-card-title,
+.content .kg-product-card-description,
+.content .kg-nft-title,
+.content .kg-nft-creator,
+.content .kg-nft-description,
+.content .kg-toggle-heading-text,
+.content .kg-audio-title,
+.content .kg-audio-duration,
+.content .kg-audio-current-time,
+.content .kg-video-duration,
+.content .kg-video-current-time {
+    color: #ddd !important;
+}
+.content .kg-blockquote-alt {
+    color: #ddd !important;
+    border-color: #444 !important;
+}

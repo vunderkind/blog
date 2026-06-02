@@ -437,3 +437,12 @@ a, a *, button, button *, label.margin-toggle,
         cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><circle cx='6' cy='6' r='3' fill='%23ddd'/></svg>") 6 6, pointer !important;
     }
 }
+
+/* ---- Custom fonts ------------------------------------------------------
+   Support Ghost's font picker (Admin → Design → Brand). If a heading/body
+   font is selected, Ghost injects --gh-font-heading / --gh-font-body and they
+   apply here; otherwise everything falls back to the Tufte et-book serif, so
+   the default design is unchanged. */
+:root { --tufte-serif: et-book, Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif; }
+body { font-family: var(--gh-font-body, var(--tufte-serif)); }
+h1, h2, h3, h4, h5, h6 { font-family: var(--gh-font-heading, var(--tufte-serif)); }
