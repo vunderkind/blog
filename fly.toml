@@ -16,6 +16,15 @@ primary_region = "ewr"            # pick one close to you: iad, lhr, ams, sjc, s
   database__connection__filename = "/var/lib/ghost/content/data/ghost.db"
   database__useNullAsDefault = "true"
 
+  # ── Newsletter batch size (SQLite safety) ─────────────────────────────
+  # Ghost's default Mailgun batch is 1000. On SQLite, Ghost inserts a whole
+  # batch's recipients in ONE `INSERT ... SELECT ... UNION ALL ...`, and SQLite
+  # caps compound SELECTs at 500 terms (SQLITE_MAX_COMPOUND_SELECT). Any list
+  # over ~500 makes that insert throw "SQLITE_ERROR: too many terms in compound
+  # SELECT", so the whole newsletter fails *before* reaching Mailgun (while
+  # transactional SMTP keeps working). Keeping batches well under 500 fixes it.
+  bulkEmail__batchSize = "100"
+
 [[mounts]]
   source = "ghost_content"
   destination = "/var/lib/ghost/content"
