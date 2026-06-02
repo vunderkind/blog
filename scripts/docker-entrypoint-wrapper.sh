@@ -22,21 +22,11 @@ if [ -d "$SRC" ]; then
   echo "[entrypoint] synced theme: $THEME_NAME"
 fi
 
-# --- Litestream: replicate SQLite to R2 ---
-DB=/var/lib/ghost/content/data/ghost.db
-if [ -n "$LITESTREAM_BUCKET" ] && [ -x /usr/local/bin/litestream ]; then
-  # If the local DB is missing but a replica exists, pull it back first.
-  # This is the disaster-recovery path on a brand-new volume.
-  if [ ! -f "$DB" ]; then
-    echo "[litestream] no local DB — attempting restore from R2"
-    mkdir -p "$(dirname "$DB")"
-    /usr/local/bin/litestream restore -if-replica-exists -config /etc/litestream.yml "$DB" \
-      || echo "[litestream] restore: no replica found (first boot, expected)"
-  fi
-  echo "[litestream] starting replicate"
-  /usr/local/bin/litestream replicate -config /etc/litestream.yml &
-else
-  echo "[litestream] skipped (LITESTREAM_BUCKET not set or binary missing)"
-fi
+# --- Litestream: DISABLED (migrated to MySQL 8) ---
+# Ghost now runs on MySQL (fly.toml: database__client=mysql), so SQLite
+# replication is obsolete. MySQL is backed up separately (Fly volume snapshots
+# + the mysqldump->R2 cron in mysql/backup/). Binary/config left in the image
+# but intentionally not started.
+echo "[litestream] disabled — Ghost runs on MySQL"
 
 exec docker-entrypoint.sh "$@"
