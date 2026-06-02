@@ -12,9 +12,13 @@ primary_region = "ewr"            # pick one close to you: iad, lhr, ams, sjc, s
   # is https://<app>.fly.dev out of the box; swap to your custom domain later.
   url = "https://gist.holeyfox.co"
   NODE_ENV = "production"
-  database__client = "sqlite3"
-  database__connection__filename = "/var/lib/ghost/content/data/ghost.db"
-  database__useNullAsDefault = "true"
+  database__client = "mysql"
+  database__connection__host = "blogwai-mysql.internal"
+  database__connection__port = "3306"
+  database__connection__user = "ghost"
+  database__connection__database = "ghost_prod"
+  database__connection__charset = "utf8mb4"
+  # database__connection__password is set via `fly secrets set`
 
   # ── Newsletter batch size (SQLite safety) ─────────────────────────────
   # Ghost's default Mailgun batch is 1000. On SQLite, Ghost inserts a whole

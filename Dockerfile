@@ -1,6 +1,8 @@
 # Ghost + our custom theme, baked into one image.
 # Used by both local `docker compose` and Fly deploys.
-FROM ghost:6-alpine
+# Pinned (was ghost:6-alpine) so deploys don't silently upgrade Ghost — the
+# MySQL schema we migrate into must match the running version.
+FROM ghost:6.43.1-alpine
 
 # Install Litestream for continuous SQLite replication to S3/R2.
 # Pinned version to avoid surprises; bump as needed.

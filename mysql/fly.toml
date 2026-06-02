@@ -1,0 +1,30 @@
+# Self-hosted MySQL 8 for Ghost, reachable only over Fly private networking
+# (blogwai-mysql.internal:3306) — no public service.
+#
+# One-time setup (from this mysql/ dir):
+#   fly apps create blogwai-mysql
+#   fly volumes create mysql_data --app blogwai-mysql --region ewr --size 1 --yes
+#   fly secrets set --app blogwai-mysql MYSQL_ROOT_PASSWORD=... MYSQL_PASSWORD=...
+#   fly deploy
+app = "blogwai-mysql"
+primary_region = "ewr"
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  MYSQL_DATABASE = "ghost_prod"
+  MYSQL_USER = "ghost"
+  # MYSQL_ROOT_PASSWORD and MYSQL_PASSWORD come from `fly secrets set`.
+
+[mounts]
+  source = "mysql_data"
+  destination = "/var/lib/mysql"
+
+# No [http_service]: MySQL is private-only (6PN). Ghost connects via
+# blogwai-mysql.internal:3306.
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "1024mb"   # headroom for Ghost's migration run; can downsize later
+  cpus = 1
