@@ -2,8 +2,10 @@
 /**
  * Push code injection (Site Header + Site Footer) to Ghost Admin
  * via the settings API. Used to style Ghost Portal's iframe to
- * match the Life of Mogwai (Tufte) theme — black bg, et-book serif,
- * clean form fields, no rounded corners.
+ * match the Life of Mogwai (Tufte) theme's permanent dark mode —
+ * #151515 bg, #ddd ink, et-book serif, clean form fields, no rounded
+ * corners. (Site is dark-only, so this CSS is dark-native — no
+ * prefers-color-scheme branch.)
  *
  * Reads GHOST_ADMIN_API_KEY from .env, signs a 5-min JWT, PUTs
  * /admin/settings/ with codeinjection_head + codeinjection_foot.
@@ -69,7 +71,7 @@ async function api(method, urlPath, body) {
 
 const HEAD = `<style>
 /* Tufte palette signal for any portal-aware components that read it. */
-:root { --ghost-accent-color: #111; }
+:root { --ghost-accent-color: #ddd; }
 </style>`;
 
 const FOOT = `<script>
@@ -93,12 +95,12 @@ const FOOT = `<script>
     '*,*::before,*::after{box-sizing:border-box}',
     'html,body,.gh-portal-popup-container,.gh-portal-content,.gh-portal-popup-wrapper,',
     '.gh-portal-popup-background{',
-    'background:#fffff8 !important;color:#111 !important;',
+    'background:#151515 !important;color:#ddd !important;',
     'font-family:et-book,Palatino,"Palatino Linotype","Book Antiqua",Georgia,serif !important;',
     'font-size:15px !important}',
 
     /* Title styled like the site logo: Gill Sans small-caps, modest size */
-    '.gh-portal-main-title{font-family:"Gill Sans","Gill Sans MT",Calibri,sans-serif !important;',
+    '.gh-portal-main-title{color:#ddd !important;font-family:"Gill Sans","Gill Sans MT",Calibri,sans-serif !important;',
     'font-weight:400 !important;font-style:normal !important;',
     'font-variant:small-caps !important;letter-spacing:0.06em !important;',
     'font-size:1.4rem !important;line-height:1.2 !important}',
@@ -110,7 +112,7 @@ const FOOT = `<script>
 
     /* Default ghost-portal-btn = NEUTRAL (transparent). Specific primary
        classes get the black-CTA treatment. Toggle/back inherit neutral. */
-    '.gh-portal-btn{background:transparent !important;color:#111 !important;',
+    '.gh-portal-btn{background:transparent !important;color:#ddd !important;',
     'border:0 !important;border-radius:0 !important;box-shadow:none !important;',
     'font-family:"Gill Sans","Gill Sans MT",Calibri,sans-serif !important;',
     'letter-spacing:0.03em !important;text-transform:none !important;',
@@ -120,33 +122,33 @@ const FOOT = `<script>
        Kwik-style rounded pill, generous padding. */
     '.gh-portal-btn-main,.gh-portal-btn-primary,.gh-portal-btn-branded,',
     '.gh-portal-signup-btn,button[type="submit"]{',
-    'background:#111 !important;color:#fffff8 !important;',
-    'border:1px solid #111 !important;border-radius:9999px !important;',
+    'background:#ddd !important;color:#151515 !important;',
+    'border:1px solid #ddd !important;border-radius:9999px !important;',
     'padding:0.85rem 1.8rem !important;font-size:1rem !important}',
     '.gh-portal-btn-main:hover,.gh-portal-btn-primary:hover,',
-    '.gh-portal-btn-branded:hover{background:#333 !important;border-color:#333 !important}',
+    '.gh-portal-btn-branded:hover{background:#aaa !important;border-color:#aaa !important}',
 
     /* Back button (top-left): subtle text-only, not a CTA */
     '.gh-portal-btn-site-title-back,[class*="site-title-back"],',
     '[class*="-back"]:not([class*="background"]){',
-    'background:transparent !important;color:#111 !important;border:0 !important;',
+    'background:transparent !important;color:#ddd !important;border:0 !important;',
     'opacity:0.55 !important;font-size:0.95rem !important;padding:0.4rem 0 !important}',
     '.gh-portal-btn-site-title-back:hover{opacity:1 !important;background:transparent !important}',
 
     /* Monthly/Yearly toggle: smaller text, refined pill */
     '.gh-portal-products-pricetoggle{background:transparent !important;',
-    'border:1px solid #111 !important;border-radius:9999px !important;',
+    'border:1px solid #ddd !important;border-radius:9999px !important;',
     'padding:0.15rem !important;display:inline-flex !important;gap:0.1rem !important}',
     '.gh-portal-products-pricetoggle .gh-portal-btn{',
-    'background:transparent !important;color:#111 !important;',
+    'background:transparent !important;color:#ddd !important;',
     'font-size:0.85rem !important;font-weight:400 !important;',
     'border-radius:9999px !important;padding:0.35rem 0.9rem !important}',
     '.gh-portal-products-pricetoggle .gh-portal-btn.active{',
-    'background:#111 !important;color:#fffff8 !important}',
+    'background:#ddd !important;color:#151515 !important}',
 
     /* Link-style buttons */
     '.gh-portal-btn-text,.gh-portal-btn-link{',
-    'background:transparent !important;color:#111 !important;',
+    'background:transparent !important;color:#ddd !important;',
     'text-decoration:underline !important;text-underline-offset:0.1em !important;',
     'text-decoration-thickness:0.05em !important;',
     'font-family:et-book,Palatino,serif !important;font-style:italic !important;',
@@ -156,68 +158,68 @@ const FOOT = `<script>
        Portal also paints a white linear-gradient via ::before that
        was hiding our black button — kill that pseudo-element. */
     '.gh-portal-btn-product{',
-    'background:#111 !important;border-radius:9999px !important;',
+    'background:#ddd !important;border-radius:9999px !important;',
     'border:0 !important;box-shadow:none !important;padding:0 !important;',
     'margin:0.5rem 0 0 0 !important;position:relative !important}',
     '.gh-portal-btn-product::before,.gh-portal-btn-product::after{',
     'display:none !important;content:none !important;background:none !important}',
     '.gh-portal-btn-product .gh-portal-btn{',
-    'background:transparent !important;color:#fffff8 !important;',
+    'background:transparent !important;color:#151515 !important;',
     'font-family:"Gill Sans","Gill Sans MT",Calibri,sans-serif !important;',
     'letter-spacing:0.03em !important;font-weight:400 !important;',
     'font-size:1rem !important;line-height:1 !important;',
     'border-radius:9999px !important;',
     'padding:0.85rem 1rem !important;width:100% !important}',
-    '.gh-portal-btn-product:hover{background:#333 !important}',
+    '.gh-portal-btn-product:hover{background:#aaa !important}',
 
     /* "Already a member? Sign in" footer */
     '.gh-portal-signup-message{',
     'font-family:et-book,Palatino,serif !important;',
     'font-size:1rem !important;font-style:italic !important;',
-    'color:#111 !important;display:flex !important;',
+    'color:#ddd !important;display:flex !important;',
     'gap:0.4rem !important;align-items:baseline !important;justify-content:center !important}',
-    '.gh-portal-signup-message > div{font-style:italic !important;color:#111 !important}',
+    '.gh-portal-signup-message > div{font-style:italic !important;color:#ddd !important}',
     '.gh-portal-signup-message .gh-portal-btn-link{',
-    'background:transparent !important;color:#111 !important;',
+    'background:transparent !important;color:#ddd !important;',
     'font-style:italic !important;text-decoration:underline !important;',
     'text-underline-offset:0.1em !important;text-decoration-thickness:0.05em !important;',
     'padding:0 !important;font-weight:400 !important}',
 
     /* Inputs: Tufte-style, single horizontal rule under each field */
     'input,select,textarea,.gh-portal-input{',
-    'border:0 !important;border-bottom:1px solid #111 !important;',
-    'border-radius:0 !important;background:transparent !important;color:#111 !important;',
+    'border:0 !important;border-bottom:1px solid #ddd !important;',
+    'border-radius:0 !important;background:transparent !important;color:#ddd !important;',
     'font-family:et-book,Palatino,serif !important;font-size:1rem !important;',
     'padding:0.4rem 0 !important;box-shadow:none !important}',
     'input:focus,select:focus,textarea:focus,.gh-portal-input:focus{',
     'border-bottom-width:2px !important;outline:0 !important;box-shadow:none !important}',
     'label,.gh-portal-input-label{',
     'font-family:"Gill Sans","Gill Sans MT",Calibri,sans-serif !important;',
-    'letter-spacing:0.03em !important;color:#111 !important;',
+    'letter-spacing:0.03em !important;color:#ddd !important;',
     'text-transform:none !important;font-weight:400 !important}',
 
     /* Tier cards: subtle border, generous padding, soft rounded corners
        (Kwik aesthetic — clean but not boxy). */
     '.gh-portal-product-card,.gh-portal-products .gh-portal-product-card{',
-    'border:1px solid #e6e6df !important;border-radius:8px !important;',
+    'border:1px solid #333 !important;border-radius:8px !important;',
     'background:transparent !important;box-shadow:none !important;',
     'padding:2rem 1.75rem !important}',
     '.gh-portal-product-card.checked,.gh-portal-product-card-selected{',
-    'border:1px solid #111 !important}',
+    'border:1px solid #ddd !important}',
     /* Remove the inner card-header double-border */
     '.gh-portal-product-card-header,.gh-portal-product-priceoption{',
     'border:0 !important;background:transparent !important;padding:0 !important;',
     'box-shadow:none !important}',
-    '.gh-portal-product-card-name{font-style:italic !important;color:#111 !important;',
+    '.gh-portal-product-card-name,.gh-portal-product-name{font-style:italic !important;color:#ddd !important;',
     'font-weight:400 !important}',
-    '.gh-portal-product-card-price,.gh-portal-product-card-pricecontainer{',
-    'font-family:et-book,serif !important;color:#111 !important}',
+    '.gh-portal-product-card-price,.gh-portal-product-card-pricecontainer,.currency-sign,.amount{',
+    'font-family:et-book,serif !important;color:#ddd !important}',
 
     /* Discount labels: subtle italic instead of gray pill — kill the
        pill border-radius and trim the font-size. */
     '.gh-portal-discount-label,.gh-portal-pricetoggle-discount,',
     '.gh-portal-maximum-discount{',
-    'background:transparent !important;color:#111 !important;border:0 !important;',
+    'background:transparent !important;color:#ddd !important;border:0 !important;',
     'border-radius:0 !important;box-shadow:none !important;',
     'font-family:et-book,serif !important;font-style:italic !important;',
     'font-weight:400 !important;letter-spacing:0 !important;',
@@ -225,27 +227,16 @@ const FOOT = `<script>
     'padding:0 0 0 0.4em !important;opacity:0.6}',
 
     'a,.gh-portal-link,.gh-portal-signup-message a{',
-    'color:#111 !important;text-decoration:underline !important;',
+    'color:#ddd !important;text-decoration:underline !important;',
     'text-underline-offset:0.1em !important;text-decoration-thickness:0.05em !important}',
 
     '.gh-portal-input-error,.error,[class*="error"]{color:#c33 !important}',
 
     '.gh-portal-powered{display:none !important}',
 
-    '@media (prefers-color-scheme: dark){',
-    'html,body,.gh-portal-popup-container,.gh-portal-content,.gh-portal-popup-wrapper,',
-    '.gh-portal-popup-background{background:#151515 !important;color:#ddd !important}',
-    'input,select,textarea,.gh-portal-input{color:#ddd !important;border-color:#444 !important}',
-    'input:focus,.gh-portal-input:focus{border-color:#ddd !important}',
-    '.gh-portal-btn,.gh-portal-btn-main,.gh-portal-btn-primary,.gh-portal-btn-branded{',
-    'background:#ddd !important;color:#151515 !important}',
-    '.gh-portal-btn:hover,.gh-portal-btn-main:hover{background:#aaa !important}',
-    '.gh-portal-product-card{border-color:#444 !important}',
-    '.gh-portal-product-card.checked{border-color:#ddd !important}',
+    /* Selected price option (paid tiers): filled CTA color */
     '.gh-portal-priceoptions .selected,.gh-portal-priceoptions [aria-checked="true"]{',
-    'background:#ddd !important;color:#151515 !important}',
-    'a,.gh-portal-link{color:#ddd !important}',
-    '}'
+    'background:#ddd !important;color:#151515 !important}'
   ].join('');
 
   function injectOnce(iframe) {

@@ -40,7 +40,7 @@
 
 /* ---- Reset & base ------------------------------------------- */
 *, *::before, *::after { box-sizing: border-box; }
-html { font-size: 15px; -webkit-text-size-adjust: 100%; }
+html { font-size: 15px; -webkit-text-size-adjust: 100%; color-scheme: dark; }
 
 body {
     width: 87.5%;
@@ -65,7 +65,7 @@ main {
     flex-shrink: 0;
 }
 
-@media (prefers-color-scheme: dark) {
+@media all { /* forced dark mode (was: prefers-color-scheme: dark) */
     body { background-color: #151515; color: #ddd; }
 }
 
@@ -250,7 +250,7 @@ span.newthought {
 }
 .foot a { text-decoration: none; }
 
-@media (prefers-color-scheme: dark) {
+@media all { /* forced dark mode (was: prefers-color-scheme: dark) */
     .foot { border-top-color: #444; }
     hr { border-top-color: #444; }
 }
@@ -297,7 +297,7 @@ span.newthought {
     opacity: 0.6;
     white-space: nowrap;
 }
-@media (prefers-color-scheme: dark) {
+@media all { /* forced dark mode (was: prefers-color-scheme: dark) */
     .post-list li { border-bottom-color: #333; }
 }
 
@@ -361,7 +361,7 @@ span.newthought {
 }
 .subscribe button:hover { background: #333; }
 
-@media (prefers-color-scheme: dark) {
+@media all { /* forced dark mode (was: prefers-color-scheme: dark) */
     .subscribe { border-top-color: #444; border-bottom-color: #444; }
     .subscribe button { background: #ddd; color: #151515; }
     .subscribe button:hover { background: #aaa; }
@@ -427,7 +427,7 @@ a, a *, button, button *, label.margin-toggle,
 .post-list a, .post-list a *, .post-list time, .pagination a {
     cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><circle cx='6' cy='6' r='3' fill='%23111'/></svg>") 6 6, pointer !important;
 }
-@media (prefers-color-scheme: dark) {
+@media all { /* forced dark mode (was: prefers-color-scheme: dark) */
     body {
         cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><circle cx='6' cy='6' r='3' fill='%23ddd'/></svg>") 6 6, default;
     }

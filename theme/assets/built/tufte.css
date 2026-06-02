@@ -274,7 +274,7 @@ th {
     border-bottom: 1px solid #111;
 }
 
-@media (prefers-color-scheme: dark) {
+@media all { /* forced dark mode (was: prefers-color-scheme: dark) */
     th { border-bottom-color: #ddd; }
 }
 
@@ -479,7 +479,7 @@ h3 > code {
     }
 }
 
-@media (prefers-color-scheme: dark) {
+@media all { /* forced dark mode (was: prefers-color-scheme: dark) */
     .content .kg-bookmark-card { border-color: #444; }
 }
 
@@ -513,7 +513,7 @@ h3 > code {
     border-radius: 0;
 }
 
-@media (prefers-color-scheme: dark) {
+@media all { /* forced dark mode (was: prefers-color-scheme: dark) */
     .content .kg-button-card a.kg-btn {
         background: #ddd;
         color: #151515;
