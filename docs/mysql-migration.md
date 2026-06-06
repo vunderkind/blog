@@ -1,5 +1,10 @@
 # Ghost SQLite → MySQL 8 migration runbook
 
+> **Status: DONE** — Ghost 6.43.1 runs on MySQL 8 (`blogwai-mysql`, option A
+> below). This is the original plan, kept for history; the `- [ ]` checkboxes
+> were the pre-flight plan, not a live TODO. The copy script that shipped is
+> [`../scripts/sqlite-to-mysql.cjs`](../scripts/sqlite-to-mysql.cjs).
+
 ## Why
 Ghost only fully supports **MySQL 8** in production. On SQLite we've hit two
 hard failures, both from the same root cause (SQLite returns datetimes/values
@@ -53,7 +58,7 @@ Let Ghost create the schema (don't hand-translate SQLite DDL):
 - [ ] Stop it. MySQL now has the exact 6.43.1 schema.
 
 ### 2. Copy the data (the core step)
-- [ ] Run `scripts/sqlite-to-mysql.mjs` (to be written): reads every table from
+- [x] Run `scripts/sqlite-to-mysql.cjs`: reads every table from
       `ghost.db` (better-sqlite3) and writes into the Ghost-created MySQL schema
       (mysql2). It will:
     - `SET FOREIGN_KEY_CHECKS=0`, **TRUNCATE** all tables (clear Ghost's seed rows),
