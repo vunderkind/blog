@@ -1,0 +1,53 @@
+# Ghost's traffic-analytics sidecar, reachable only over Fly private
+# networking (blogwai-analytics.internal:3000) — no public service.
+#
+# It receives page_hit beacons that Ghost proxies from /.ghost/analytics/*,
+# enriches them (user-agent parse + daily-salted, cookie-free session
+# signature), and forwards them to the Tinybird events API. Ghost's native
+# web-analytics dashboard reads Tinybird directly and does NOT go through
+# this service (see ../README.md → Web analytics).
+#
+# One-time setup (from this analytics/ dir):
+#   fly apps create blogwai-analytics
+#   printf 'TINYBIRD_TRACKER_TOKEN=%s\n' "$TOKEN" | fly secrets import --app blogwai-analytics
+#   fly deploy --ha=false
+#
+# The matching Ghost config lives in Fly secrets on the `blogwai` app:
+#   analytics__enabled=true
+#   analytics__url=http://blogwai-analytics.internal:3000
+#   tinybird__tracker__endpoint=https://gist.holeyfox.co/.ghost/analytics/api/v1/page_hit
+#   tinybird__tracker__datasource=analytics_events
+#   tinybird__adminToken=...        # workspace admin token (signs dashboard read JWTs)
+#   tinybird__workspaceId=1fe265e4-a164-4bbb-87ba-d942882d74e5
+#   tinybird__stats__endpoint=https://api.europe-west2.gcp.tinybird.co
+
+app = "blogwai-analytics"
+primary_region = "ewr"
+
+# Pinned: don't let the sidecar silently upgrade out of lockstep with Ghost.
+[build]
+  image = "ghost/traffic-analytics:1.0.244"
+
+[env]
+  NODE_ENV = "production"
+  PORT = "3000"
+  # The image reads LISTEN_HOST (NOT HOST); its default 0.0.0.0 is IPv4-only
+  # and unreachable over Fly's IPv6-only 6PN. Bind :: (dual-stack) so Ghost
+  # can reach it at blogwai-analytics.internal:3000.
+  LISTEN_HOST = "::"
+  PROXY_TARGET = "https://api.europe-west2.gcp.tinybird.co/v0/events"
+  # Salt store for cookie-free session signatures. Ephemeral on /tmp — a daily
+  # salt that resets on the (rare) machine restart is fine for a small blog.
+  SALT_STORE_TYPE = "file"
+  SALT_STORE_FILE_PATH = "/tmp/salts.json"
+  LOG_LEVEL = "info"
+  # TINYBIRD_TRACKER_TOKEN (append on analytics_events) comes from `fly secrets`.
+
+# No [http_service] and no allocated IPs: private-only over 6PN, exactly like
+# blogwai-mysql. The LISTEN_HOST=:: above is what makes <app>.internal work
+# (the image otherwise binds IPv4-only, which 6PN can't reach).
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "512mb"                  # 256MB OOM-kills it on boot (node --enable-source-maps)
+  cpus = 1
