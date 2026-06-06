@@ -67,6 +67,27 @@ Then in Ghost Admin:
 2. **Settings → Design** → change active theme to **Minima** (it's mounted from `./theme`).
 3. **Settings → Email newsletter** → set sender address.
 
+## Web analytics
+
+First-party, cookie-free analytics via **Ghost 6's native Tinybird
+integration**, in **Admin → Analytics**. Two pieces that Ghost's official Docker
+Compose bundles are reproduced by hand here (a single-container Fly app has
+neither):
+
+- **`analytics/`** — the `ghost/traffic-analytics` sidecar (Fly app
+  `blogwai-analytics`): enriches page-hits and forwards them to Tinybird.
+- **`scripts/Caddyfile`** — a tiny Caddy baked into the image that fronts Ghost
+  and routes `/.ghost/analytics/*` to the sidecar (Ghost doesn't serve that
+  path). `fly.toml`'s `internal_port` points at Caddy (`:8080` → Ghost `:2368`).
+
+```
+browser ─ ghost-stats.js ─▶ /.ghost/analytics/… ─▶ Caddy ─▶ sidecar ─▶ Tinybird
+Admin → Analytics ─ reads ─▶ Tinybird pipes directly
+```
+
+**→ Full architecture, config reference, setup-from-scratch, verification, and a
+debugging table: [docs/web-analytics.md](docs/web-analytics.md).**
+
 ## Adding a plugin
 
 ```bash
