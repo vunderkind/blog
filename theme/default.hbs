@@ -81,51 +81,13 @@
   clone.classList.add('subscribe-mid');
   target.after(clone);
 })();</script>
-{{!-- Tinybird page-hit tracker. Ghost upstream image lacks the
-     analytics admin endpoints, so the Admin toggle cannot enable
-     this; we POST events directly to the workspace's analytics_events
-     datasource. View dashboards at:
-     https://cloud.tinybird.co/gcp/europe-west2/life_of_mogwai
-     The token below is APPEND-only on analytics_events — safe to
-     expose in HTML; worst case an attacker can spam events. --}}
-<script>(function(){
-  var TB_TOKEN="p.eyJ1IjogIjFmZTI2NWU0LWExNjQtNGJiYi04N2JhLWQ5NDI4ODJkNzRlNSIsICJpZCI6ICIwYmI1M2EzMC1lNDAzLTRhYzYtYTE5OC1kZTZhYTg3YTI4ZmYiLCAiaG9zdCI6ICJnY3AtZXVyb3BlLXdlc3QyIn0.evBOYlqOjRvHnHGMBpnNsF2PQl7viy7dniW1PTzCSBI";
-  var TB_URL="https://api.europe-west2.gcp.tinybird.co/v0/events?name=analytics_events";
-  var SITE_UUID="{{@site.site_uuid}}";
-  try {
-    var sid = sessionStorage.getItem('tb_sid');
-    if(!sid){ sid = (crypto && crypto.randomUUID) ? crypto.randomUUID() :
-      ('xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,function(c){
-        var r=Math.random()*16|0,v=c==='x'?r:(r&0x3|0x8); return v.toString(16);
-      }));
-      sessionStorage.setItem('tb_sid', sid);
-    }
-    var payload = {
-      timestamp: new Date().toISOString(),
-      action: 'page_hit',
-      version: '1',
-      session_id: sid,
-      payload: {
-        site_uuid: SITE_UUID || 'unknown',
-        member_uuid: 'undefined',
-        member_status: 'undefined',
-        post_uuid: 'undefined',
-        post_type: 'null',
-        locale: (navigator.language || 'en'),
-        location: '',
-        referrer: document.referrer || null,
-        pathname: location.pathname,
-        href: location.href
-      }
-    };
-    fetch(TB_URL, {
-      method: 'POST',
-      headers: {'Content-Type':'application/json','Authorization':'Bearer '+TB_TOKEN},
-      body: JSON.stringify(payload),
-      keepalive: true
-    }).catch(function(){});
-  } catch(e){}
-})();</script>
+{{!-- Web analytics is handled natively now: Ghost's {{ghost_head}} injects the
+     ghost-stats tracker, which POSTs page hits to /.ghost/analytics/* on this
+     origin. A small Caddy front proxy (../scripts/Caddyfile) routes that to the
+     traffic-analytics sidecar (../analytics/fly.toml), which enriches the event
+     (UA -> browser/os/device, cookie-free session) and forwards it to Tinybird.
+     The old DIY tracker that POSTed directly to Tinybird lived here; it was
+     removed to avoid double-counting once native ingestion went live. --}}
 {{ghost_foot}}
 </body>
 </html>
