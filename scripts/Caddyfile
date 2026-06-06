@@ -1,0 +1,35 @@
+# In-machine front proxy for the blogwai Ghost app.
+#
+# Ghost's native web-analytics tracker (ghost-stats.js) POSTs page-hit beacons
+# to /.ghost/analytics/api/v1/page_hit on the blog's own origin. Ghost does NOT
+# serve that path — in the official Docker setup a Caddy gateway routes it to
+# the traffic-analytics sidecar. Our Fly setup has no such gateway, so we run
+# this tiny Caddy in front of Ghost to do the same routing, same-origin.
+#
+# Topology:  Fly edge (TLS) --http--> Caddy :8080 --> { Ghost :2368 | sidecar }
+# fly.toml's [http_service].internal_port must point at 8080 (this Caddy).
+{
+	admin off
+	auto_https off # Fly terminates TLS and force_https-redirects at the edge.
+	# Fly's proxy reaches us from a private address and sets X-Forwarded-*;
+	# trust it so Caddy preserves the original https scheme + client IP.
+	servers {
+		trusted_proxies static private_ranges
+	}
+}
+
+:8080 {
+	# Native analytics beacons -> traffic-analytics sidecar. handle_path strips
+	# the /.ghost/analytics prefix so the sidecar sees /api/v1/page_hit.
+	handle_path /.ghost/analytics/* {
+		reverse_proxy blogwai-analytics.internal:3000
+	}
+
+	# Everything else -> Ghost. force_https at the Fly edge guarantees the
+	# original request was https; assert it so Ghost doesn't redirect-loop.
+	handle {
+		reverse_proxy 127.0.0.1:2368 {
+			header_up X-Forwarded-Proto https
+		}
+	}
+}

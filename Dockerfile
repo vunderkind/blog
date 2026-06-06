@@ -30,6 +30,13 @@ COPY --chown=node:node theme /var/lib/ghost/content.orig/themes/holey-fox
 # and templated into env-vars that this YAML references.
 COPY --chown=root:root scripts/litestream.yml /etc/litestream.yml
 
+# Front proxy: a pinned Caddy binary (copied from the official image) routes
+# /.ghost/analytics/* to the traffic-analytics sidecar — which Ghost itself
+# does not serve — and everything else to Ghost. See scripts/Caddyfile.
+# fly.toml's internal_port points at Caddy (:8080), which fronts Ghost (:2368).
+COPY --from=caddy:2.10.2-alpine /usr/bin/caddy /usr/bin/caddy
+COPY --chown=root:root scripts/Caddyfile /etc/caddy/Caddyfile
+
 # Ghost's stock entrypoint only seeds /var/lib/ghost/content from
 # /var/lib/ghost/content.orig if the live dir is empty. After the
 # volume's first boot, theme updates baked into the image never reach

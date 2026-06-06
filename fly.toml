@@ -26,7 +26,7 @@ primary_region = "ewr"            # pick one close to you: iad, lhr, ams, sjc, s
   initial_size = "3gb"
 
 [http_service]
-  internal_port = 2368
+  internal_port = 8080             # Caddy front proxy (scripts/Caddyfile); it fronts Ghost on :2368
   force_https = true
   auto_stop_machines = "off"       # Ghost is stateful — keep the VM up
   auto_start_machines = true
